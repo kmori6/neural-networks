@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "neural-networks"
+version = "0.1.0"
+description = ""
+authors = ["Kosuke Mori"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+
+[tool.flake8]
+max-line-length = 120
+ignore = "E203,E501,W503"
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+[tool.mypy]
+ignore_missing_imports = true
