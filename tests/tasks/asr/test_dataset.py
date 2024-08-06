@@ -15,10 +15,10 @@ def json_tmp_file(tmp_path: Path) -> str:
     data = {}
     for i in range(2):
         utt_id = f"utt_id{i}"
-        audio_path = f"{tmp_path}/audio{i}.wav"
-        waveform = np.random.randn(sample_rate)  # 1 second of dummy audio
-        soundfile.write(audio_path, waveform, sample_rate)
-        data[utt_id] = {"audio_path": audio_path, "audio_length": len(waveform), "text": text}
+        speech_path = f"{tmp_path}/speech{i}.wav"
+        speech = np.random.randn(sample_rate)  # 1 second of dummy speech
+        soundfile.write(speech_path, speech, sample_rate)
+        data[utt_id] = {"speech_path": speech_path, "speech_length": len(speech), "text": text}
     json_tmp_path = f"{tmp_path}/data.json"
     with open(json_tmp_path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
@@ -30,7 +30,7 @@ def test_dataset(json_tmp_file: str):
     assert len(dataset) == 2
     for i in range(len(dataset)):
         sample = dataset[i]
-        audio = sample["audio"]
+        speech = sample["speech"]
         text = sample["text"]
-        isinstance(audio, torch.Tensor)
+        isinstance(speech, torch.Tensor)
         assert text == "hello world"
