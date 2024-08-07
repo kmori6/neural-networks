@@ -76,11 +76,7 @@ class Trainer:
                 for k, v in stats.items():
                     msg += f"{k}: {v:.3f}, "
                 logger.info(msg)
-                break
             epoch_loss += stats["loss"] * batch[next(iter(batch))].shape[0]
-
-        self.scheduler.step()
-
         return epoch_loss / len(self.train_dataloader)
 
     @torch.no_grad()
