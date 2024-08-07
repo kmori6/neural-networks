@@ -14,7 +14,7 @@ def conformer_model() -> Conformer:
     return Conformer(input_size, d_model, num_heads, kernel_size, num_blocks)
 
 
-def test_conformer_forward(conformer_model: Conformer):
+def test_conformer(conformer_model: Conformer):
     batch_size = 2
     seq_length = 100
     input_dim = 80
