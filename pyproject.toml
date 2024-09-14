@@ -1,8 +1,10 @@
 [tool.poetry]
 name = "neural-networks"
 version = "0.1.0"
-description = ""
+description = "Neural Network Toolkit for Speech and Language Processing"
 authors = ["Kosuke Mori"]
+homepage = "https://github.com/kmori6"
+repository = "https://github.com/kmori6/neural-networks"
 readme = "README.md"
 
 [tool.poetry.dependencies]
