@@ -8,8 +8,8 @@ from torch.utils.data import DataLoader
 from neural_networks.tasks.mt.collate_fn import CollateFn
 from neural_networks.tasks.mt.dataset import CustomDataset
 from neural_networks.tasks.mt.model import Model
-from neural_networks.tasks.trainer import Trainer
 from neural_networks.tasks.txt.tokenizer import SentencePieceTokenizer
+from neural_networks.trainer import Trainer
 
 
 @hydra.main(version_base=None, config_path="config", config_name="train")

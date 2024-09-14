@@ -7,8 +7,8 @@ from torch.utils.data import DataLoader
 from neural_networks.tasks.lm.collate_fn import CollateFn
 from neural_networks.tasks.lm.dataset import CustomDataset
 from neural_networks.tasks.lm.model import Model
-from neural_networks.tasks.trainer import Trainer
 from neural_networks.tasks.txt.tokenizer import SentencePieceTokenizer
+from neural_networks.trainer import Trainer
 from neural_networks.utils.config import write_train_config
 
 
