@@ -1,0 +1,53 @@
+dataset:
+  train_json_path: ???
+  valid_json_path: ???
+
+dataloader:
+  batch_size: 512
+  num_workers: 2
+
+tokenizer:
+  model_path: ???
+
+model:
+  vocab_size: 1024
+  d_model: 512
+  num_heads: 8
+  d_ff: 2048
+  num_layers: 6
+  dropout_rate: 0.1
+  pad_token_id: 0
+  bos_token_id: 1
+  eos_token_id: 1
+  label_smoothing: 0.1
+
+trainer:
+  optimizer:
+    lr: 1e-3
+    weight_decay: 1e-3
+  scheduler:
+    warmup_steps: 1000
+  epochs: 2
+  grad_accum_steps: 4
+  max_norm: 5.0
+  log_steps: 10
+  out_dir: ???
+  checkpoint_path:
+
+hydra:
+  run:
+    dir: ./
+  output_subdir: null
+  job_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '%(asctime)s %(filename)s:%(lineno)d %(levelname)s: %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+    root:
+      handlers: [console]
+    disable_existing_loggers: false

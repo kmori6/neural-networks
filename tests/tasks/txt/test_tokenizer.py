@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from neural_networks.modules.tokenizer import SentencePieceTokenizer, train_tokenizer
+from neural_networks.tasks.txt.tokenizer import SentencePieceTokenizer, train_tokenizer
 
 
 @pytest.fixture
