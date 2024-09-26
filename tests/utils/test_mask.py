@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from neural_networks.utils.attention_mask import causal_mask, chunk_mask, sequence_mask
+from neural_networks.utils.mask import causal_mask, chunk_mask, sequence_mask
 
 
 @pytest.mark.parametrize(

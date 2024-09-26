@@ -1,7 +1,7 @@
 from sentencepiece import SentencePieceProcessor, SentencePieceTrainer
 
 
-class SentencePieceTokenizer:
+class Tokenizer:
     def __init__(self, model_path: str):
         self.sp_model = SentencePieceProcessor(model_file=model_path)
 

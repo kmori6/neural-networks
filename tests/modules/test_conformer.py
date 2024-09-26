@@ -9,7 +9,7 @@ from neural_networks.modules.conformer import (
     FeedForwardModule,
     MultiHeadSelfAttentionModule,
 )
-from neural_networks.utils.attention_mask import sequence_mask
+from neural_networks.utils.mask import sequence_mask
 
 
 @pytest.fixture

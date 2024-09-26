@@ -12,7 +12,7 @@ from neural_networks.modules.transformer import (
     RelativePositionalEncoding,
     RelativePositionalMultiHeadAttention,
 )
-from neural_networks.utils.attention_mask import causal_mask, sequence_mask
+from neural_networks.utils.mask import causal_mask, sequence_mask
 
 
 @pytest.fixture

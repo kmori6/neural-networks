@@ -8,7 +8,7 @@ import torch.optim as optim
 from omegaconf import OmegaConf
 from torch.utils.data import DataLoader, TensorDataset
 
-from neural_networks.trainer import Trainer
+from neural_networks.utils.trainer import Trainer
 
 
 class MockModel(nn.Module):

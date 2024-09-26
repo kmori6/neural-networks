@@ -9,7 +9,7 @@ from neural_networks.modules.transformer import (
     RelativePositionalEncoding,
     RelativePositionalMultiHeadAttention,
 )
-from neural_networks.utils.attention_mask import chunk_mask, sequence_mask
+from neural_networks.utils.mask import chunk_mask, sequence_mask
 
 
 class ConvolutionSubsampling(nn.Module):

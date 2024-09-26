@@ -12,7 +12,7 @@ from tqdm import tqdm
 from neural_networks.tasks.lm.collate_fn import CollateFn
 from neural_networks.tasks.lm.dataset import CustomDataset
 from neural_networks.tasks.lm.model import Model
-from neural_networks.tasks.txt.tokenizer import SentencePieceTokenizer
+from neural_networks.utils.tokenizer import Tokenizer
 
 logger = getLogger(__name__)
 
@@ -22,7 +22,7 @@ def main(config: DictConfig):
     with open(config.train_config_path, "r", encoding="utf-8") as f:
         train_config = Namespace(**json.load(f))
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    tokenizer = SentencePieceTokenizer(**train_config.tokenizer)
+    tokenizer = Tokenizer(**train_config.tokenizer)
     test_dataset = CustomDataset(config.test_json_path)
     test_dataloader = DataLoader(
         dataset=test_dataset,

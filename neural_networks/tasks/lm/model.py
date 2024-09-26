@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 
 from neural_networks.modules.transformer import AbsolutePositionalEncoding, Encoder
-from neural_networks.utils.attention_mask import causal_mask
+from neural_networks.utils.mask import causal_mask
 
 
 class Model(nn.Module):

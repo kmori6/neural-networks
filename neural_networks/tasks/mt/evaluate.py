@@ -11,19 +11,14 @@ from whisper.normalizers import BasicTextNormalizer
 
 from neural_networks.tasks.mt.dataset import CustomDataset
 from neural_networks.tasks.mt.model import Model
-from neural_networks.tasks.txt.tokenizer import SentencePieceTokenizer
+from neural_networks.utils.tokenizer import Tokenizer
 
 logger = getLogger(__name__)
 
 
 @torch.no_grad()
 def translate(
-    model: Model,
-    src_text: str,
-    tokenizer: SentencePieceTokenizer,
-    beam_size: int,
-    device: torch.device,
-    max_length: int = 1024,
+    model: Model, src_text: str, tokenizer: Tokenizer, beam_size: int, device: torch.device, max_length: int = 1024
 ) -> str:
     token_enc = torch.tensor([tokenizer.encode(src_text)], dtype=torch.long, device=device)  # (1, time1)
     # encode
@@ -63,7 +58,7 @@ def main(config: DictConfig):
         train_config = Namespace(**json.load(f))
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     test_dataset = CustomDataset(config.test_json_path)
-    tokenizer = SentencePieceTokenizer(**train_config.tokenizer)
+    tokenizer = Tokenizer(**train_config.tokenizer)
     state_dict = torch.load(config.model_path, map_location=device)
     model = Model(**train_config.model).to(device).eval()
     model.load_state_dict(state_dict)

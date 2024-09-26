@@ -13,13 +13,13 @@ from whisper.normalizers import EnglishTextNormalizer
 from neural_networks.modules.transducer import default_beam_search
 from neural_networks.tasks.asr.dataset import CustomDataset
 from neural_networks.tasks.asr.model import Model
-from neural_networks.tasks.txt.tokenizer import SentencePieceTokenizer
+from neural_networks.utils.tokenizer import Tokenizer
 
 logger = getLogger(__name__)
 
 
 @torch.no_grad()
-def recognize(model: Model, speech: torch.Tensor, tokenizer: SentencePieceTokenizer, beam_size: int) -> str:
+def recognize(model: Model, speech: torch.Tensor, tokenizer: Tokenizer, beam_size: int) -> str:
     speech_length = torch.tensor([len(speech)], dtype=torch.long, device=speech.device)
     x, mask = model.frontend(speech[None, :], speech_length)
     x, _ = model.encoder(x, mask)  # (batch, frame, encoder_size)
@@ -33,7 +33,7 @@ def recognize(model: Model, speech: torch.Tensor, tokenizer: SentencePieceTokeni
 def streaming_recognize(
     model: Model,
     speech: torch.Tensor,
-    tokenizer: SentencePieceTokenizer,
+    tokenizer: Tokenizer,
     beam_size: int,
     speech_chunk_size: int,
     history_chunk_size: int,
@@ -60,7 +60,7 @@ def main(config: DictConfig):
         train_config = Namespace(**json.load(f))
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     test_dataset = CustomDataset(config.test_json_path)
-    tokenizer = SentencePieceTokenizer(**train_config.tokenizer)
+    tokenizer = Tokenizer(**train_config.tokenizer)
     state_dict = torch.load(config.model_path, map_location=device)
     model = Model(**train_config.model).to(device).eval()
     model.load_state_dict(state_dict)

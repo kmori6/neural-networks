@@ -3,7 +3,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from neural_networks.utils.attention_mask import sequence_mask
+from neural_networks.utils.mask import sequence_mask
 
 
 class Frontend(nn.Module):

@@ -8,7 +8,7 @@ from neural_networks.modules.transformer import (
     Decoder,
     Encoder,
 )
-from neural_networks.utils.attention_mask import causal_mask, sequence_mask
+from neural_networks.utils.mask import causal_mask, sequence_mask
 
 
 class Model(nn.Module):

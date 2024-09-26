@@ -1,3 +1,4 @@
+import json
 import os
 from logging import getLogger
 from pathlib import Path
@@ -5,7 +6,7 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 from torch.amp import GradScaler, autocast
 from torch.optim.lr_scheduler import LambdaLR
 from torch.utils.data import DataLoader
@@ -25,12 +26,17 @@ class Trainer:
         self.optimizer = self._get_optimizer()
         self.scheduler = self._get_scheduler()
         self.scaler = GradScaler("cuda" if torch.cuda.is_available() else "cpu")
-        self.best_valid_loss = float("inf")
-        self.start_epoch = 0
         self.out_dir = Path(self.config.out_dir)
-
+        # load checkpoint
         if os.path.exists(self.config.checkpoint_path):
             self._load_checkpoint()
+        else:
+            self.best_valid_loss = float("inf")
+            self.start_epoch = 0
+        # write train config
+        os.makedirs(self.out_dir, exist_ok=True)
+        with open(self.out_dir / "train_config.json", "w", encoding="utf-8") as f:
+            json.dump(OmegaConf.to_container(config, resolve=True), f, ensure_ascii=False, indent=4)
 
     def _get_optimizer(self):
         return optim.AdamW(

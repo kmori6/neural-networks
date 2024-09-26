@@ -3,11 +3,11 @@ from typing import Any
 import torch
 from torch.nn.utils.rnn import pad_sequence
 
-from neural_networks.tasks.txt.tokenizer import SentencePieceTokenizer
+from neural_networks.utils.tokenizer import Tokenizer
 
 
 class CollateFn:
-    def __init__(self, tokenizer: SentencePieceTokenizer, blank_token_id: int):
+    def __init__(self, tokenizer: Tokenizer, blank_token_id: int):
         self.tokenizer = tokenizer
         self.blank_token_id = blank_token_id
 
