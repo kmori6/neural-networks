@@ -1,7 +1,6 @@
-import librosa
-import numpy as np
 import torch
 import torch.nn as nn
+from torchaudio.functional import melscale_fbanks
 
 from neural_networks.utils.mask import sequence_mask
 
@@ -12,18 +11,17 @@ class Frontend(nn.Module):
         self.n_fft = n_fft
         self.hop_length = hop_length
         self.win_length = win_length
-        fbank = librosa.filters.mel(
-            sr=16000,
-            n_fft=n_fft,
+        fbank = melscale_fbanks(
+            n_freqs=n_fft // 2 + 1,
+            f_min=0,
+            f_max=8000,
             n_mels=n_mels,
-            fmin=0,
-            fmax=8000,
-            htk=False,
+            sample_rate=16000,
             norm="slaney",
-            dtype=np.float32,
+            mel_scale="slaney",
         )
         self.register_buffer("window", torch.hann_window(win_length, dtype=torch.float32), persistent=False)
-        self.register_buffer("fbank", torch.from_numpy(np.transpose(fbank)))  # (n_freqs, n_mels)
+        self.register_buffer("fbank", fbank)  # (n_freqs, n_mels)
 
     def forward(self, speech: torch.Tensor, length: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         """
