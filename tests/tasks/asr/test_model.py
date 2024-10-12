@@ -20,8 +20,8 @@ def test_model():
         num_layers=2,
         dropout_rate=0.1,
         ctc_loss_weight=0.5,
-        chunk_size=0,
-        num_history_chunks=0,
+        chunk_size=5,
+        history_window_size=5,
     )
     loss, stats = model(speech, speech_length, token, target, target_length)
     assert isinstance(loss, torch.Tensor)

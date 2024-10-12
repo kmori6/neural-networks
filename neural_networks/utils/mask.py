@@ -5,11 +5,17 @@ def sequence_mask(length: torch.Tensor) -> torch.Tensor:
     return torch.arange(max(length), device=length.device) < length[:, None]
 
 
-def chunk_mask(length: int, chunk_size: int, num_history_chunks: int) -> torch.Tensor:
+def chunk_mask(length: int, chunk_size: int, history_window_size: int) -> torch.Tensor:
+    """Attention mask design for training streaming models
+
+    Reference: https://arxiv.org/abs/2010.11395
+
+    """
     row = torch.arange(length)[:, None]
     col = torch.arange(length)[None, :]
-    start = (col // chunk_size) * chunk_size
-    return (row >= start) & (col >= start.T - chunk_size * num_history_chunks)
+    row_start = (col // chunk_size) * chunk_size
+    col_start = row_start.T - history_window_size
+    return (row >= row_start) & (col >= col_start)
 
 
 def causal_mask(length: torch.Tensor) -> torch.Tensor:

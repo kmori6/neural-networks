@@ -7,9 +7,8 @@ from torch.utils.data import DataLoader
 from neural_networks.tasks.asr.collate_fn import CollateFn
 from neural_networks.tasks.asr.dataset import CustomDataset
 from neural_networks.tasks.asr.model import Model
-from neural_networks.tasks.txt.tokenizer import SentencePieceTokenizer
-from neural_networks.trainer import Trainer
-from neural_networks.utils.config import write_train_config
+from neural_networks.utils.tokenizer import Tokenizer
+from neural_networks.utils.trainer import Trainer
 
 
 @hydra.main(version_base=None, config_path="config", config_name="train")
@@ -17,7 +16,7 @@ def main(config: DictConfig):
     os.makedirs(config.trainer.out_dir, exist_ok=True)
     train_dataset = CustomDataset(config.dataset.train_json_path)
     valid_dataset = CustomDataset(config.dataset.valid_json_path)
-    tokenizer = SentencePieceTokenizer(config.tokenizer.model_path)
+    tokenizer = Tokenizer(config.tokenizer.model_path)
     model = Model(
         vocab_size=config.model.vocab_size,
         n_mels=config.model.n_mels,
@@ -30,7 +29,7 @@ def main(config: DictConfig):
         dropout_rate=config.model.dropout_rate,
         ctc_loss_weight=config.model.ctc_loss_weight,
         chunk_size=config.model.chunk_size,
-        num_history_chunks=config.model.num_history_chunks,
+        history_window_size=config.model.history_window_size,
     )
     train_dataloader = DataLoader(
         dataset=train_dataset,
@@ -52,7 +51,6 @@ def main(config: DictConfig):
         pin_memory=True,
         drop_last=False,
     )
-    write_train_config(config, config.trainer.out_dir)
     trainer = Trainer(model, train_dataloader, valid_dataloader, config.trainer)
     trainer.train()
 

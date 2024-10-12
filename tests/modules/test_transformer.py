@@ -2,15 +2,15 @@ import pytest
 import torch
 
 from neural_networks.modules.transformer import (
-    AbsolutePositionalEncoding,
     Decoder,
     DecoderLayer,
     Encoder,
     EncoderLayer,
     FeedForward,
     MultiHeadAttention,
-    RelativePositionalEncoding,
+    PositionalEncoding,
     RelativePositionalMultiHeadAttention,
+    RotaryPositionalMultiHeadAttention,
 )
 from neural_networks.utils.mask import causal_mask, sequence_mask
 
@@ -28,18 +28,11 @@ def mock_data() -> dict[str, torch.Tensor]:
     }
 
 
-def test_absolute_positional_encoding(mock_data: dict[str, torch.Tensor]):
+def test_positional_encoding(mock_data: dict[str, torch.Tensor]):
     _, seq_length, d_model = mock_data["x_enc"].shape
-    module = AbsolutePositionalEncoding(d_model, seq_length)
-    output = module(mock_data["x_enc"])
-    assert output.shape == (1, seq_length, d_model)
-
-
-def test_relative_positional_encoding(mock_data: dict[str, torch.Tensor]):
-    _, seq_length, d_model = mock_data["x_enc"].shape
-    module = RelativePositionalEncoding(d_model, seq_length)
-    output = module(mock_data["x_enc"])
-    assert output.shape == (1, 2 * seq_length - 1, d_model)
+    module = PositionalEncoding(d_model)
+    output = module(mock_data["x_enc"].shape[1], mock_data["x_enc"].dtype, mock_data["x_enc"].device)
+    assert output.shape == (seq_length, d_model)
 
 
 def test_multi_head_attention(mock_data: dict[str, torch.Tensor]):
@@ -72,24 +65,47 @@ def test_relative_positional_multi_head_attention(mock_data: dict[str, torch.Ten
     *_, d_model = mock_data["x_enc"].shape
     module = RelativePositionalMultiHeadAttention(d_model, num_heads=8, dropout_rate=0.1)
     # self-attention
-    p = torch.randn(1, 2 * mock_data["x_enc"].shape[1] - 1, d_model)
-    output = module(mock_data["x_enc"], mock_data["x_enc"], mock_data["x_enc"], p, mock_data["mask_enc"])
+    output = module(mock_data["x_enc"], mock_data["x_enc"], mock_data["x_enc"], mock_data["mask_enc"])
     assert output.shape == mock_data["x_enc"].shape
     loss = output.sum()
     loss.backward()
     for param in module.parameters():
         assert param.grad is not None and torch.all(torch.isfinite(param.grad))
     # masked self-attention
-    p = torch.randn(1, 2 * mock_data["x_dec"].shape[1] - 1, d_model)
-    output = module(mock_data["x_dec"], mock_data["x_dec"], mock_data["x_dec"], p, mock_data["mask_dec"])
+    output = module(mock_data["x_dec"], mock_data["x_dec"], mock_data["x_dec"], mock_data["mask_dec"])
     assert output.shape == mock_data["x_dec"].shape
     loss = output.sum()
     loss.backward()
     for param in module.parameters():
         assert param.grad is not None and torch.all(torch.isfinite(param.grad))
     # cross-attention
-    p = torch.randn(1, 2 * mock_data["x_enc"].shape[1] - 1, d_model)
-    output = module(mock_data["x_dec"], mock_data["x_enc"], mock_data["x_enc"], p, mock_data["mask_enc"])
+    output = module(mock_data["x_dec"], mock_data["x_enc"], mock_data["x_enc"], mock_data["mask_enc"])
+    assert output.shape == mock_data["x_dec"].shape
+    loss = output.sum()
+    loss.backward()
+    for param in module.parameters():
+        assert param.grad is not None and torch.all(torch.isfinite(param.grad))
+
+
+def test_rotary_positional_multi_head_attention(mock_data: dict[str, torch.Tensor]):
+    *_, d_model = mock_data["x_enc"].shape
+    module = RotaryPositionalMultiHeadAttention(d_model, num_heads=8, dropout_rate=0.1)
+    # self-attention
+    output = module(mock_data["x_enc"], mock_data["x_enc"], mock_data["x_enc"], mock_data["mask_enc"])
+    assert output.shape == mock_data["x_enc"].shape
+    loss = output.sum()
+    loss.backward()
+    for param in module.parameters():
+        assert param.grad is not None and torch.all(torch.isfinite(param.grad))
+    # masked self-attention
+    output = module(mock_data["x_dec"], mock_data["x_dec"], mock_data["x_dec"], mock_data["mask_dec"])
+    assert output.shape == mock_data["x_dec"].shape
+    loss = output.sum()
+    loss.backward()
+    for param in module.parameters():
+        assert param.grad is not None and torch.all(torch.isfinite(param.grad))
+    # cross-attention
+    output = module(mock_data["x_dec"], mock_data["x_enc"], mock_data["x_enc"], mock_data["mask_enc"])
     assert output.shape == mock_data["x_dec"].shape
     loss = output.sum()
     loss.backward()

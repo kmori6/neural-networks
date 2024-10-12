@@ -19,7 +19,7 @@ def test_sequence_mask(length: torch.Tensor, desired: torch.Tensor):
 
 
 @pytest.mark.parametrize(
-    "length, chunk_size, num_history_chunks, desired",
+    "length, chunk_size, history_window_size, desired",
     [
         (
             6,
@@ -44,10 +44,10 @@ def test_sequence_mask(length: torch.Tensor, desired: torch.Tensor):
                 [
                     [True, True, False, False, False, False],
                     [True, True, False, False, False, False],
-                    [True, True, True, True, False, False],
-                    [True, True, True, True, False, False],
-                    [False, False, True, True, True, True],
-                    [False, False, True, True, True, True],
+                    [False, True, True, True, False, False],
+                    [False, True, True, True, False, False],
+                    [False, False, False, True, True, True],
+                    [False, False, False, True, True, True],
                 ]
             ),
         ),
@@ -73,16 +73,16 @@ def test_sequence_mask(length: torch.Tensor, desired: torch.Tensor):
                 [
                     [True, True, False, False, False],
                     [True, True, False, False, False],
-                    [True, True, True, True, False],
-                    [True, True, True, True, False],
-                    [False, False, True, True, True],
+                    [False, True, True, True, False],
+                    [False, True, True, True, False],
+                    [False, False, False, True, True],
                 ]
             ),
         ),
     ],
 )
-def test_chunk_mask(length: int, chunk_size: int, num_history_chunks: int, desired: torch.Tensor):
-    actual = chunk_mask(length, chunk_size, num_history_chunks)
+def test_chunk_mask(length: int, chunk_size: int, history_window_size: int, desired: torch.Tensor):
+    actual = chunk_mask(length, chunk_size, history_window_size)
     assert torch.equal(actual, desired), f"Expected {desired} but got {actual}"
 
 

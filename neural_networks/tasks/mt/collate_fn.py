@@ -17,22 +17,22 @@ class CollateFn:
         self.ignore_token_id = ignore_token_id
 
     def __call__(self, sample_list: list[dict[str, Any]]) -> dict[str, torch.Tensor]:
-        token_enc_list, enc_length_list, token_dec_list, dec_length_list, token_tgt_list = [], [], [], [], []
+        enc_token_list, enc_length_list, dec_token_list, dec_length_list, tgt_token_list = [], [], [], [], []
         for sample in sample_list:
-            token_enc = self.tokenizer.encode(sample["src_text"])
-            token_enc_list.append(torch.tensor(token_enc, dtype=torch.long))
-            enc_length_list.append(len(token_enc))
+            enc_token = self.tokenizer.encode(sample["src_text"])
+            enc_token_list.append(torch.tensor(enc_token, dtype=torch.long))
+            enc_length_list.append(len(enc_token))
             base_token = self.tokenizer.encode(sample["tgt_text"])
-            token_dec = [self.bos_token_id] + base_token
-            token_tgt = base_token + [self.eos_token_id]
-            token_dec_list.append(torch.tensor(token_dec, dtype=torch.long))
-            token_tgt_list.append(torch.tensor(token_tgt, dtype=torch.long))
-            dec_length_list.append(len(token_dec))
+            dec_token = [self.bos_token_id] + base_token
+            tgt_token = base_token + [self.eos_token_id]
+            dec_token_list.append(torch.tensor(dec_token, dtype=torch.long))
+            tgt_token_list.append(torch.tensor(tgt_token, dtype=torch.long))
+            dec_length_list.append(len(dec_token))
         batch = {
-            "token_enc": pad_sequence(token_enc_list, True, self.pad_token_id),
-            "token_enc_length": torch.tensor(enc_length_list, dtype=torch.long),
-            "token_dec": pad_sequence(token_dec_list, True, self.pad_token_id),
-            "token_dec_length": torch.tensor(dec_length_list, dtype=torch.long),
-            "token_tgt": pad_sequence(token_tgt_list, True, self.ignore_token_id),
+            "enc_token": pad_sequence(enc_token_list, True, self.pad_token_id),
+            "enc_token_length": torch.tensor(enc_length_list, dtype=torch.long),
+            "dec_token": pad_sequence(dec_token_list, True, self.pad_token_id),
+            "dec_token_length": torch.tensor(dec_length_list, dtype=torch.long),
+            "tgt_token": pad_sequence(tgt_token_list, True, self.ignore_token_id),
         }
         return batch

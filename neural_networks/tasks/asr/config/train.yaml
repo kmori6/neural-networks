@@ -20,8 +20,8 @@ model:
   num_layers: 1
   dropout_rate: 0.1
   ctc_loss_weight: 0.3
-  chunk_size: 20 # 640 ms
-  num_history_chunks: 1 # 640 ms
+  chunk_size: 23 # 720 ms
+  history_window_size: 60 # 1920 ms
 
 trainer:
   optimizer:

@@ -21,7 +21,7 @@ class Model(nn.Module):
         dropout_rate: float,
         ctc_loss_weight: float,
         chunk_size: int,
-        num_history_chunks: int,
+        history_window_size: int,
     ):
         super().__init__()
         self.blank_token_id = vocab_size - 1
@@ -35,7 +35,7 @@ class Model(nn.Module):
             num_blocks=num_blocks,
             dropout_rate=dropout_rate,
             chunk_size=chunk_size,
-            num_history_chunks=num_history_chunks,
+            history_window_size=history_window_size,
         )
         self.predictor = Predictor(
             vocab_size=vocab_size,

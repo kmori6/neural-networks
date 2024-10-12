@@ -1,5 +1,3 @@
-from typing import Optional
-
 import torch
 import torch.nn as nn
 
@@ -152,13 +150,13 @@ class Conformer(nn.Module):
         kernel_size: int = 31,
         num_blocks: int = 17,
         dropout_rate: float = 0.1,
-        chunk_size: Optional[int] = None,
-        num_history_chunks: Optional[int] = None,
+        chunk_size: int = 23,
+        history_window_size: int = 60,
     ):
         super().__init__()
         self.d_model = d_model
         self.chunk_size = chunk_size
-        self.num_history_chunks = num_history_chunks
+        self.history_window_size = history_window_size
         self.convolution_subsampling = ConvolutionSubsampling(d_model)
         self.linear = nn.Linear(d_model * (((input_size - 1) // 2 - 1) // 2), d_model)
         self.dropout = nn.Dropout(dropout_rate)
@@ -179,12 +177,7 @@ class Conformer(nn.Module):
         x, mask = self.convolution_subsampling(x, mask)
         x = self.linear(x)
         x = self.dropout(x)
-        if self.training and self.chunk_size and self.num_history_chunks:
-            attn_mask = chunk_mask(x.shape[1], self.chunk_size, self.num_history_chunks).to(mask.device)[
-                None, None, :, :
-            ]  # (1, 1, frame', frame')
-        else:
-            attn_mask = mask[:, None, None, :]  # (batch, 1, 1, frame')
+        attn_mask = chunk_mask(x.shape[1], self.chunk_size, self.history_window_size).to(mask.device)[None, None, :, :]
         for block in self.conformer_blocks:
             x = block(x, attn_mask)
         return x, mask

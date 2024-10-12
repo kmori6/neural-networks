@@ -4,11 +4,11 @@ from neural_networks.tasks.mt.model import Model
 
 
 def test_model():
-    token_enc = torch.tensor([[11, 12, 13, 0, 0], [11, 12, 13, 14, 15]], dtype=torch.long)
-    token_enc_length = torch.tensor([3, 5], dtype=torch.long)
-    token_dec = torch.tensor([[1, 21, 22, 23, 0, 0], [1, 21, 22, 23, 24, 25]], dtype=torch.long)
-    token_dec_length = torch.tensor([4, 6], dtype=torch.long)
-    token_tgt = torch.tensor([[21, 22, 23, 2, 0, 0], [21, 22, 23, 24, 25, 2]], dtype=torch.long)
+    enc_token = torch.tensor([[11, 12, 13, 0, 0], [11, 12, 13, 14, 15]], dtype=torch.long)
+    enc_token_length = torch.tensor([3, 5], dtype=torch.long)
+    dec_token = torch.tensor([[1, 21, 22, 23, 0, 0], [1, 21, 22, 23, 24, 25]], dtype=torch.long)
+    dec_token_length = torch.tensor([4, 6], dtype=torch.long)
+    tgt_token = torch.tensor([[21, 22, 23, 2, 0, 0], [21, 22, 23, 24, 25, 2]], dtype=torch.long)
     model = Model(
         vocab_size=30,
         d_model=256,
@@ -22,7 +22,7 @@ def test_model():
         label_smoothing=0.1,
         ignore_token_id=-100,
     )
-    loss, stats = model(token_enc, token_enc_length, token_dec, token_dec_length, token_tgt)
+    loss, stats = model(enc_token, enc_token_length, dec_token, dec_token_length, tgt_token)
     assert isinstance(loss, torch.Tensor)
     loss.backward()
     for param in model.parameters():

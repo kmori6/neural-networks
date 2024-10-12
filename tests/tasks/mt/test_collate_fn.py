@@ -19,36 +19,36 @@ def test_collate_fn():
     )
     batch = collate_fn(dataset)
 
-    assert "token_enc" in batch
-    assert "token_enc_length" in batch
-    assert "token_dec" in batch
-    assert "token_dec_length" in batch
-    assert "token_tgt" in batch
+    assert "enc_token" in batch
+    assert "enc_token_length" in batch
+    assert "dec_token" in batch
+    assert "dec_token_length" in batch
+    assert "tgt_token" in batch
 
-    token_enc = batch["token_enc"]
-    token_enc_length = batch["token_enc_length"]
-    token_dec = batch["token_dec"]
-    token_dec_length = batch["token_dec_length"]
-    token_tgt = batch["token_tgt"]
+    enc_token = batch["enc_token"]
+    enc_token_length = batch["enc_token_length"]
+    dec_token = batch["dec_token"]
+    dec_token_length = batch["dec_token_length"]
+    tgt_token = batch["tgt_token"]
 
-    assert token_enc.shape == (2, 9)
-    assert token_enc_length.tolist() == [6, 9]
-    assert token_dec.shape == (2, 10)  # add bos token
-    assert token_dec_length.tolist() == [7, 10]
-    assert token_tgt.shape == (2, 10)  # add eos token
+    assert enc_token.shape == (2, 9)
+    assert enc_token_length.tolist() == [6, 9]
+    assert dec_token.shape == (2, 10)  # add bos token
+    assert dec_token_length.tolist() == [7, 10]
+    assert tgt_token.shape == (2, 10)  # add eos token
 
-    exp_token_enc = [
+    exp_enc_token = [
         [ord("s"), ord("r"), ord("c"), ord(" "), ord("h"), ord("i"), 0, 0, 0],
         [ord("s"), ord("r"), ord("c"), ord(" "), ord("h"), ord("e"), ord("l"), ord("l"), ord("o")],
     ]
-    exp_token_dec = [
+    exp_dec_token = [
         [1, ord("t"), ord("g"), ord("t"), ord(" "), ord("h"), ord("i"), 0, 0, 0],
         [1, ord("t"), ord("g"), ord("t"), ord(" "), ord("h"), ord("e"), ord("l"), ord("l"), ord("o")],
     ]
-    exp_token_tgt = [
+    exp_tgt_token = [
         [ord("t"), ord("g"), ord("t"), ord(" "), ord("h"), ord("i"), 2, -100, -100, -100],
         [ord("t"), ord("g"), ord("t"), ord(" "), ord("h"), ord("e"), ord("l"), ord("l"), ord("o"), 2],
     ]
-    assert token_enc.tolist() == exp_token_enc
-    assert token_dec.tolist() == exp_token_dec
-    assert token_tgt.tolist() == exp_token_tgt
+    assert enc_token.tolist() == exp_enc_token
+    assert dec_token.tolist() == exp_dec_token
+    assert tgt_token.tolist() == exp_tgt_token

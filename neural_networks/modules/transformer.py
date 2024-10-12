@@ -161,7 +161,7 @@ class RotaryPositionalMultiHeadAttention(MultiHeadAttention):
         p_q = self.pe(q.shape[2], q.dtype, q.device)[None, None, :, :]  # (1, 1, time1, d_k)
         p_qsin, p_qcos = p_q[..., 0::2].repeat_interleave(2, dim=-1), p_q[..., 1::2].repeat_interleave(2, dim=-1)
         p_k = self.pe(k.shape[2], q.dtype, q.device)[None, None, :, :]  # (1, 1, time2, d_k)
-        p_ksin, p_kcos = p_k[..., 0::2].repeat_interleave(2, dim=-1), p_q[..., 1::2].repeat_interleave(2, dim=-1)
+        p_ksin, p_kcos = p_k[..., 0::2].repeat_interleave(2, dim=-1), p_k[..., 1::2].repeat_interleave(2, dim=-1)
         q = q * p_qcos + torch.stack([-q[..., 1::2], q[..., 0::2]], dim=-1).flatten(3) * p_qsin
         k = k * p_kcos + torch.stack([-k[..., 1::2], k[..., 0::2]], dim=-1).flatten(3) * p_ksin
         x = torch.matmul(q, k.transpose(2, 3)) / math.sqrt(self.d_k)  # (batch, head, time1, time2)
