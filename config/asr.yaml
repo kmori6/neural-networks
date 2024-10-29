@@ -1,10 +1,7 @@
 dataset:
   train_json_path: ???
   valid_json_path: ???
-
-dataloader:
-  batch_size: 4
-  num_workers: 2
+  test_json_path: ???
 
 tokenizer:
   model_path: ???
@@ -20,8 +17,22 @@ model:
   num_layers: 1
   dropout_rate: 0.1
   ctc_loss_weight: 0.3
-  chunk_size: 23 # 720 ms
-  history_window_size: 60 # 1920 ms
+  chunk_size: 22 # lookahead (ms): 720
+  history_window_size: 60 # hist frame: 60
+
+dataloader:
+  train:
+    batch_size: 4
+    shuffle: true
+    num_workers: 2
+    pin_memory: true
+    drop_last: true
+  valid:
+    batch_size: 4
+    shuffle: false
+    num_workers: 2
+    pin_memory: true
+    drop_last: false
 
 trainer:
   optimizer:
@@ -29,12 +40,20 @@ trainer:
     weight_decay: 1e-3
   scheduler:
     warmup_steps: 25000
-  epochs: 100
+  epochs: 50
   grad_accum_steps: 8
   max_norm: 5.0
   log_steps: 10
   out_dir: ???
   checkpoint_path:
+
+decode:
+  model_path: ???
+  out_dir: ???
+  beam_size: 4
+  audio_chunk_size: 11520 # 720 ms (22 frames)
+  history_chunk_size: 30720 # 1920 ms (60 frames)
+  history_window_size: 60 # hist frame: 60
 
 hydra:
   run:

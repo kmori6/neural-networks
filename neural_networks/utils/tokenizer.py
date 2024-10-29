@@ -22,7 +22,7 @@ def train_tokenizer(
 ):
     SentencePieceTrainer.train(
         input=text_file_path,
-        vocab_size=vocab_size - 1,  # last id is for <blank>
+        vocab_size=vocab_size,
         model_type=model_type,
         model_prefix=model_prefix,
         character_coverage=character_coverage,

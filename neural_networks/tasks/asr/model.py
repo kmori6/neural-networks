@@ -57,8 +57,8 @@ class Model(nn.Module):
 
     def forward(
         self,
-        speech: torch.Tensor,
-        speech_length: torch.Tensor,
+        audio: torch.Tensor,
+        audio_length: torch.Tensor,
         token: torch.Tensor,
         target: torch.Tensor,
         target_length: torch.Tensor,
@@ -66,8 +66,8 @@ class Model(nn.Module):
         """
 
         Args:
-            speech (torch.Tensor): Sqeech (batch, sample).
-            speech_length (torch.Tensor): Speech length (batch,).
+            audio (torch.Tensor): Sqeech (batch, sample).
+            audio_length (torch.Tensor): Speech length (batch,).
             token (torch.Tensor): Predictor input token (batch, length + 1).
             target (torch.Tensor): Target token (batch, length).
             target_length (torch.Tensor): Target token length (batch,).
@@ -77,8 +77,8 @@ class Model(nn.Module):
                 torch.Tensor: Loss.
                 dict[str, torch.Tensor]: Statistics.
         """
-        b = speech.shape[0]
-        x_enc, mask = self.frontend(speech, speech_length)
+        b = audio.shape[0]
+        x_enc, mask = self.frontend(audio, audio_length)
         x_enc, mask = self.encoder(x_enc, mask)  # (batch, frame, encoder_size)
         x_ctc = self.linear(x_enc).log_softmax(-1).transpose(0, 1)  # (frame, batch, vocab_size)
         x_dec, _ = self.predictor(token, self.predictor.init_state(b, x_enc.device))  # (batch, time, predictor_size)

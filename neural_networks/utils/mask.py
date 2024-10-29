@@ -11,6 +11,8 @@ def chunk_mask(length: int, chunk_size: int, history_window_size: int) -> torch.
     Reference: https://arxiv.org/abs/2010.11395
 
     """
+    if chunk_size < 0:
+        return torch.ones([length, length], dtype=torch.bool)
     row = torch.arange(length)[:, None]
     col = torch.arange(length)[None, :]
     row_start = (col // chunk_size) * chunk_size

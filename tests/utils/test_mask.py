@@ -79,6 +79,20 @@ def test_sequence_mask(length: torch.Tensor, desired: torch.Tensor):
                 ]
             ),
         ),
+        (
+            5,
+            -1,
+            1,
+            torch.tensor(
+                [
+                    [True, True, True, True, True],
+                    [True, True, True, True, True],
+                    [True, True, True, True, True],
+                    [True, True, True, True, True],
+                    [True, True, True, True, True],
+                ]
+            ),
+        ),
     ],
 )
 def test_chunk_mask(length: int, chunk_size: int, history_window_size: int, desired: torch.Tensor):
