@@ -25,26 +25,26 @@ def collate_fn(tokenizer):
 
 def test_collate_fn(collate_fn):
     dataset = [
-        {"speech": torch.tensor([0.1, 0.2, 0.3]), "text": "hi"},
-        {"speech": torch.tensor([0.4, 0.5]), "text": "hello"},
+        {"audio": torch.tensor([0.1, 0.2, 0.3]), "text": "hi"},
+        {"audio": torch.tensor([0.4, 0.5]), "text": "hello"},
     ]
 
     batch = collate_fn(dataset)
 
-    assert "speech" in batch
-    assert "speech_length" in batch
+    assert "audio" in batch
+    assert "audio_length" in batch
     assert "token" in batch
     assert "target" in batch
     assert "target_length" in batch
 
-    speech = batch["speech"]
-    speech_length = batch["speech_length"]
+    audio = batch["audio"]
+    audio_length = batch["audio_length"]
     token = batch["token"]
     target = batch["target"]
     target_length = batch["target_length"]
 
-    assert speech.shape == (2, 3)
-    assert speech_length.tolist() == [3, 2]
+    assert audio.shape == (2, 3)
+    assert audio_length.tolist() == [3, 2]
 
     expected_target = [[ord("h"), ord("i"), 0, 0, 0], [ord("h"), ord("e"), ord("l"), ord("l"), ord("o")]]
     expected_token = [[0, ord("h"), ord("i"), 0, 0, 0], [0, ord("h"), ord("e"), ord("l"), ord("l"), ord("o")]]

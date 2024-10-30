@@ -45,7 +45,7 @@ def recognize(
     return tokenizer.decode(hyp[0]["token"][1:])  # type: ignore[index]
 
 
-@hydra.main(version_base=None, config_path=f"{os.path.dirname(__file__)}/../../../config", config_name="asr")
+@hydra.main(version_base=None, config_path=f"{os.path.dirname(__file__)}/../../config", config_name="asr")
 def main(config: DictConfig):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     test_dataset = CustomDataset(config.dataset.test_json_path)

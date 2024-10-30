@@ -61,12 +61,12 @@ def main():
                         dic[utt_id] = sample
                         if key == "train":
                             text_list.append(text + "\n")
-        os.makedirs(Path(args.data_dir) / "processed", exist_ok=True)
-        with open(Path(args.data_dir) / "processed" / f"{key}.json", "w", encoding="utf-8") as f:
+        os.makedirs(Path(args.data_dir) / "asr", exist_ok=True)
+        with open(Path(args.data_dir) / "asr" / f"{key}.json", "w", encoding="utf-8") as f:
             json.dump(dic, f, ensure_ascii=False, indent=4)
 
     # train text file for tokenizer
-    text_file_path = Path(args.data_dir) / "processed" / "train.txt"
+    text_file_path = Path(args.data_dir) / "asr" / "train.txt"
     with open(text_file_path, "w", encoding="utf-8") as f:
         f.writelines(text_list)
 

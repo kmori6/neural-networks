@@ -11,7 +11,7 @@ from neural_networks.utils.tokenizer import Tokenizer
 from neural_networks.utils.trainer import Trainer
 
 
-@hydra.main(version_base=None, config_path=f"{os.path.dirname(__file__)}/../../../config", config_name="asr")
+@hydra.main(version_base=None, config_path=f"{os.path.dirname(__file__)}/../../config", config_name="asr")
 def main(config: DictConfig):
     os.makedirs(config.trainer.out_dir, exist_ok=True)
     train_dataset = CustomDataset(config.dataset.train_json_path)
