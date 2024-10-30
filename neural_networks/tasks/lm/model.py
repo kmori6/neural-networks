@@ -18,7 +18,7 @@ class Model(nn.Module):
         dropout_rate: float,
         pad_token_id: int,
         bos_token_id: int = 1,
-        eos_token_id: int = 1,
+        eos_token_id: int = 2,
         label_smoothing: float = 0.1,
         ignore_token_id: int = -100,
     ):
@@ -51,5 +51,5 @@ class Model(nn.Module):
         loss = self.loss_fn(x.flatten(0, 1), target.flatten())
         mask_valid = target != self.ignore_token_id
         acc = (x.argmax(-1)[mask_valid] == target[mask_valid]).sum() / mask_valid.sum()
-        pp = torch.exp(loss)
-        return loss, {"loss": loss.item(), "acc": acc.item(), "pp": pp.item()}
+        ppl = torch.exp(loss)
+        return loss, {"loss": loss.item(), "acc": acc.item(), "ppl": ppl.item()}

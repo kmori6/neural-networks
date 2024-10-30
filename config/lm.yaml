@@ -1,10 +1,7 @@
 dataset:
   train_json_path: ???
   valid_json_path: ???
-
-dataloader:
-  batch_size: 512
-  num_workers: 2
+  test_json_path: ???
 
 tokenizer:
   model_path: ???
@@ -17,22 +14,40 @@ model:
   num_layers: 6
   dropout_rate: 0.1
   pad_token_id: 0
-  bos_token_id: 1
-  eos_token_id: 1
+  bos_token_id: 2
+  eos_token_id: 3
   label_smoothing: 0.1
+
+dataloader:
+  train:
+    batch_size: 8
+    shuffle: true
+    num_workers: 2
+    pin_memory: true
+    drop_last: true
+  valid:
+    batch_size: 8
+    shuffle: false
+    num_workers: 2
+    pin_memory: true
+    drop_last: false
 
 trainer:
   optimizer:
-    lr: 1e-3
+    lr: 1e-4
     weight_decay: 1e-3
   scheduler:
-    warmup_steps: 1000
-  epochs: 2
+    warmup_steps: 25000
+  epochs: 10
   grad_accum_steps: 4
   max_norm: 5.0
-  log_steps: 10
+  log_steps: 1000
   out_dir: ???
   checkpoint_path:
+
+decode:
+  model_path: ???
+  out_dir: ???
 
 hydra:
   run:
