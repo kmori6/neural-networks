@@ -28,7 +28,7 @@ def test_model():
     assert isinstance(stats, dict)
     assert "loss" in stats
     assert "acc" in stats
-    assert "pp" in stats
+    assert "ppl" in stats
     assert isinstance(stats["loss"], float)
     assert isinstance(stats["acc"], float)
-    assert isinstance(stats["pp"], float)
+    assert isinstance(stats["ppl"], float)
