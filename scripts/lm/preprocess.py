@@ -14,8 +14,10 @@ def main():
     parser.add_argument("--out_dir", type=str, required=True)
     parser.add_argument("--vocab_size", type=int, default=1024)
     parser.add_argument("--model_type", type=str, default="unigram", choices=["unigram", "bpe"])
-    parser.add_argument("--valid_rate", type=float, default=0.1)
-    parser.add_argument("--test_rate", type=float, default=0.1)
+    parser.add_argument("--valid_rate", type=float, default=0.05)
+    parser.add_argument("--test_rate", type=float, default=0.05)
+    parser.add_argument("--min_length", type=int, default=1)
+    parser.add_argument("--max_length", type=float, default=64)
     args = parser.parse_args()
     normalizer = EnglishTextNormalizer()
     with open(f"{args.data_dir}/librispeech-lm-norm.txt", "r") as f:
@@ -34,6 +36,9 @@ def main():
         for i, line in tqdm(enumerate(subset), total=len(subset), desc=key):
             sample_id = str(i).zfill(8)
             text = normalizer(line.replace("\n", ""))
+            text_length = len(text)
+            if key in ["train", "valid"] and (text_length < args.min_length or args.max_length < text_length):
+                continue
             dic[sample_id] = {"text": text}
             if key == "train":
                 text_list.append(text + "\n")

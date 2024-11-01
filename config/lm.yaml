@@ -20,13 +20,19 @@ model:
 
 dataloader:
   train:
-    batch_size: 8
+    batch_size: 256
     shuffle: true
     num_workers: 2
     pin_memory: true
     drop_last: true
   valid:
-    batch_size: 8
+    batch_size: 256
+    shuffle: false
+    num_workers: 2
+    pin_memory: true
+    drop_last: false
+  test:
+    batch_size: 4
     shuffle: false
     num_workers: 2
     pin_memory: true
