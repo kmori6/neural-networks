@@ -25,7 +25,7 @@ jobs:
         uses: snok/install-poetry@v1
 
       - name: Install dependencies
-        run: poetry install
+        run: poetry install && sudo apt-get install ffmpeg
 
       - name: Run tests
         run: poetry run pytest --cov=neural_networks --cov-report=xml tests
