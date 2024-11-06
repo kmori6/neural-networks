@@ -1,9 +1,9 @@
 import json
+import wave
 from pathlib import Path
 
 import numpy as np
 import pytest
-import soundfile
 import torch
 
 from neural_networks.tasks.asr.dataset import CustomDataset
@@ -17,7 +17,11 @@ def json_tmp_file(tmp_path: Path) -> str:
     for i in range(2):
         audio_path = f"{tmp_path}/audio{i}.wav"
         audio = np.random.randn(sample_rate)  # 1 second of dummy audio
-        soundfile.write(audio_path, audio, sample_rate)
+        with wave.open(audio_path, "wb") as f:
+            f.setnchannels(1)
+            f.setsampwidth(2)  # 2 bytes (16 bits)
+            f.setframerate(sample_rate)
+            f.writeframes(audio.tobytes())
         data[f"utt_id{i}"] = {"audio_path": audio_path, "audio_length": len(audio), "text": text}
     json_tmp_path = f"{tmp_path}/data.json"
     with open(json_tmp_path, "w", encoding="utf-8") as f:
