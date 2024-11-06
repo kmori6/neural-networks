@@ -17,7 +17,7 @@ def json_tmp_file(tmp_path: Path) -> str:
     for i in range(2):
         audio_path = f"{tmp_path}/audio{i}.wav"
         audio = np.random.randn(sample_rate)  # 1 second of dummy audio
-        write(audio_path, rate=16000, data=audio.astype(np.int16))  # 16kHz, 16-bit PCM
+        write(audio_path, rate=sample_rate, data=audio)
         data[f"utt_id{i}"] = {"audio_path": audio_path, "audio_length": len(audio), "text": text}
     json_tmp_path = f"{tmp_path}/data.json"
     with open(json_tmp_path, "w", encoding="utf-8") as f:
