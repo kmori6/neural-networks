@@ -6,3 +6,5 @@ COPY pyproject.toml .
 ENV PATH="${PATH}:/root/.local/bin"
 RUN curl -sSL https://install.python-poetry.org | python3 - && \
     poetry install
+
+CMD ["/bin/bash"]

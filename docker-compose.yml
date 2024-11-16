@@ -1,0 +1,16 @@
+services:
+  neural-networks:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    container_name: neural-networks
+    volumes:
+      - .:/work
+    tty: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
